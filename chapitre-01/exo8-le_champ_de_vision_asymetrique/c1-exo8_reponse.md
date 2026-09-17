@@ -1,4 +1,4 @@
-# Exercice 8 — Le champ de vision asymétrique
+# Exercice 8 :Le champ de vision asymétrique
 
 ## Les quatre angles, œil gauche
 Source des données: discussion SteamVR Developer Hardware, « Verification of the FOV properties of HTC Vive Pro » — https://steamcommunity.com/app/358720/discussions/0/4766584846445428818/
