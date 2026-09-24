@@ -1,17 +1,16 @@
-[c3-exo2_reponse.md](https://github.com/user-attachments/files/32587579/c3-exo2_reponse.md)
 # Exercice — `jenga info` avant le build
 
-## Commande lancée
+## Commande utilisée
 
-```
+bash
 cd MaSalle
 jenga info
-```
 
-## Sortie complète
 
-```
-========================= Jenga Workspace: MaSalleWks ==========================
+## Résultat
+
+```text
+Jenga Workspace: MaSalleWks 
 
 Location: /home/claude/MaSalle
 Entry file: /home/claude/MaSalle/MaSalle.jenga
@@ -22,30 +21,38 @@ Target Architectures:
 
 
 Projects
-------------------------------------------------------------
+
 Name      Kind          Language   Test   External
-==================================================
+
 MaSalle   WindowedApp   C++        No     No
 
 
 Available Toolchains
-------------------------------------------------------------
+
 Name       Family   Target OS   Arch     Env
-============================================
+
 host-gcc   gcc      Linux       x86_64   gnu
 
 
 Daemon
-------------------------------------------------------------
+
 Status: Not running
 ```
 
-## Ce que cette sortie m'apprend, que le fichier `.jenga` ne disait pas
+## Analyse et ## Conclusion
 
-Mon fichier de projet ne fait que déclarer un espace de travail, un projet `windowedapp()` en C++17 et une liste de sources. Il ne dit rien sur la machine qui va réellement le construire. Or `jenga info` révèle des choses qui ne dépendent pas du fichier, mais de l'environnement où je travaille :
+La commande `jenga info` permet de voir les informations liées au projet et à l'environnement de travail.
 
-- **La seule chaîne de compilation disponible ici est `host-gcc`** (GCC, Linux, x86_64, environnement gnu). Rien dans mon fichier `.jenga` ne nomme ce compilateur : Jenga l'a détecté tout seul sur ma machine. Si je voulais un jour cibler Android ou Windows, il faudrait qu'une chaîne correspondante apparaisse dans cette liste — ce que le fichier de projet ne peut pas garantir à lui seul.
-- **La ligne `Platforms: Windows` ne correspond pas à ce que je construis réellement.** Mon projet tourne et se lie sur Linux, avec `host-gcc`, et pourtant cette ligne affiche « Windows ». Comme je n'ai déclaré ni `targetoses()` ni `targetarchs()` dans mon fichier, Jenga affiche une valeur par défaut à cet endroit, indépendante de la machine réelle. Autrement dit, cette ligne du rapport reflète une valeur par défaut du système, pas un fait technique observé sur ma configuration — c'est un piège si on la lit trop vite en pensant qu'elle décrit l'environnement de build effectif.
-- **Le daemon n'est pas démarré.** C'est une information d'état d'exécution (rien à voir avec le contenu du fichier de projet) : elle me dit que je n'ai pas de processus Jenga persistant en arrière-plan pour accélérer les prochains builds.
+Dans mon cas, le projet **MaSalle** est une application graphique en C++ Les configurations disponibles sont **Debug** et **Release**.
 
-En résumé : le fichier `.jenga` décrit une *intention* (ce que je veux construire), alors que `jenga info` décrit une *situation* (ce que la machine devant moi est réellement capable de construire, là, maintenant). C'est exactement pour ça que le chapitre insiste pour lancer cette commande avant de supposer quoi que ce soit sur sa chaîne de compilation.
+La chaîne de compilation détectée est `host-gcc`. Elle utilise GCC sur Linux x86_64 Cela montre que Jenga a trouvé automatiquement le compilateur disponible sur la machine.
+
+On remarque aussi que `Platforms` affiche **Windows**, alors que la chaîne de compilation détectée fonctionne sous Linux. Cette valeur ne correspond donc pas directement à l'environnement réel de compilation. Elle semble venir de la configuration par défaut puisque les systèmes et architectures cibles ne sont pas précisés dans le fichier `.jenga`.
+
+Enfin, le daemon Jenga n'est pas lancé. Cela signifie simplement qu'aucun processus Jenga ne fonctionne actuellement en arrière-plan.
+
+## Conclusion
+
+Pour moi, la différence principale est simple : le fichier `.jenga` décrit ce que je veux construire, tandis que `jenga info` me montre ce que mon environnement peut actuellement utiliser pour construire le projet**.
+
+La commande est donc utile avant le build pour vérifier rapidement la configuration disponible et éviter de partir sur une mauvaise configuration.
