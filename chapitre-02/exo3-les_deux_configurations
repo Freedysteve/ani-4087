@@ -1,0 +1,50 @@
+# Exercice — Les deux configurations
+
+## Ce que j'ai fait
+
+Dans mon dossier de projet, j'ai lancé :
+
+```
+jenga build --config Debug
+jenga build --config Release
+```
+
+## Ce qui s'est passé
+
+```
+Configuration: Debug
+Target:        Windows x86_64
+Toolchain:     mingw
+
+Build Order (1 projects):
+  1. MaSalle [WINDOWED_APP]
+
+No source files found for project MaSalle
+
+Projects Built:  1/1
+Time:           0.01s
+Status:         ✓ SUCCESS
+```
+
+```
+Configuration: Release
+Target:        Windows x86_64
+Toolchain:     mingw
+
+Build Order (1 projects):
+  1. MaSalle [WINDOWED_APP]
+
+No source files found for project MaSalle
+
+Projects Built:  1/1
+Time:           0.01s
+Status:         ✓ SUCCESS
+```
+
+## Les nombres, honnêtement
+
+Le "build" réussit dans les deux configurations, mais Jenga annonce clairement `No source files found for project MaSalle` : mon dossier `src/` ne contient pas encore de fichier `.cpp`, donc rien n'est compilé et aucun exécutable n'est produit, ni en Debug ni en Release. Je n'ai donc pas de taille d'exécutable à comparer pour l'instant — il n'y a simplement rien à mesurer.
+
+Côté temps : 0,01 s dans les deux cas, identique. Ce n'est pas un vrai temps de compilation, c'est juste le temps que prend Jenga pour constater qu'il n'y a aucun fichier à traiter.
+
+
