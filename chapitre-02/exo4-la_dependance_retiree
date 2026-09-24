@@ -1,0 +1,32 @@
+# Exercice — La dépendance retirée
+
+## Ce que j'ai mis en place
+
+J'ai ajouté deux bibliothèques statiques à mon projet MaSalle :
+
+- LibBase, avec une fonction `int BaseValue()`.
+- LibMiddle, qui dépend de LibBase (`dependson(["LibBase"])`) et a une fonction `int MiddleValue()` qui appelle `BaseValue()` dedans.
+
+Mon exécutable MaSalle dépend juste de LibMiddle, et son `main()` appelle `MiddleValue()`. Par contre je n'ai pas mis LibBase dans les dépendances de MaSalle — c'est la dépendance de ma dépendance, celle que j'ai "oubliée" volontairement pour l'exercice.
+
+## Message d'erreur, tel qu'il est sorti
+
+```
+Compilation Error: Link Failed
+/usr/bin/ld:
+/home/FS/MaSalle/Build/Lib/Debug-Linux/LibMiddle/LibMiddle.a(libmiddle_middle.o): in
+function `MiddleValue()':
+/home/FS/MaSalle/libmiddle/middle.cpp:5:(.text+0x9): undefined reference to
+`BaseValue()'
+collect2: error: ld returned 1 exit status
+```
+
+## C'est quelle étape
+
+C'est une erreur d'édition de liens, pas de compilation. La preuve : LibBase et LibMiddle ont toutes les deux compilé sans souci, main.cpp aussi. Donc le préprocesseur, la compilation et l'assemblage se sont bien passés partout, mon code connaissait bien `BaseValue()` grâce à l'include.
+
+L'erreur vient de `ld` (le linker) et de `collect2` qui l'appelle. Le message dit "undefined reference", ce qui veut dire : je connais cette fonction, elle a été déclarée, mais je ne trouve son code compilé nulle part. C'est exactement le travail du linker de rassembler tous les bouts (objets + archives) et de faire correspondre chaque appel à son implémentation — et là, il n'y arrive pas.
+
+## Pourquoi ça arrive
+
+L'archive LibMiddle.a contient un appel vers `BaseValue()` qui n'est jamais résolu, parce qu'une archive statique n'embarque pas ses propres dépendances. C'est à l'exécutable final de fournir toutes les archives dont ses dépendances ont elles-mêmes besoin. Comme je n'ai mis que LibMiddle dans les dépendances de MaSalle (pas LibBase), l'archive LibBase.a n'arrive jamais jusqu'au linker de mon exécutable. 
