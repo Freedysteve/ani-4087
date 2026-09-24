@@ -39,7 +39,7 @@ Daemon
 Status: Not running
 ```
 
-## Analyse et ## Conclusion
+## Analyse et  Conclusion
 
 La commande `jenga info` permet de voir les informations liées au projet et à l'environnement de travail.
 
