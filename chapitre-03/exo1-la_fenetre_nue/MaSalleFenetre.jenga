@@ -1,0 +1,33 @@
+from Jenga import *
+from jengaconfig import *
+
+with project("MaSalleFenetre"):
+    windowedapp()
+    language("C++")
+    cppdialect("C++17")
+    location(".")
+
+    files(["src/**.cpp"])
+
+    nkentseudependson(
+        ["NKWindow", "NKEvent", "NKLogger", "NKMath", "NKTime", "NKStream",
+         "NKFileSystem", "NKContainers", "NKMemory", "NKCore", "NKPlatform", "NKThreading"],
+        extra_includes=["src", "src/MaSalleFenetre"],
+    )
+
+    objdir("%{wks.location}/Build/Obj/%{cfg.buildcfg}-%{cfg.system}/%{prj.name}")
+    targetdir("%{wks.location}/Build/Bin/%{cfg.buildcfg}-%{cfg.system}/%{prj.name}")
+
+    with filter("system:Linux && !options:headless"):
+        usetoolchain("clang-native")
+        defines(["NKENTSEU_FORCE_WINDOWING_XLIB_ONLY"])
+        links(["pthread", "X11", "Xext", "Xrandr", "Xinerama", "Xcursor", "Xi", "Xfixes", "Xss", "GL"])
+
+    with filter("config:Debug"):
+        defines(["_DEBUG", "DEBUG"])
+        optimize("Off")
+        symbols(True)
+    with filter("config:Release"):
+        defines(["NDEBUG"])
+        optimize("Speed")
+        symbols(False)
