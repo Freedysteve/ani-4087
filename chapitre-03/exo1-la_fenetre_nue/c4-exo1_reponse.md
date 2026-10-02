@@ -32,7 +32,7 @@ int main() {
 
 ## Mon fichier de projet (MaSalleFenetre.jenga)
 
-Voir le fichier joint. Il déclare un `windowedapp()` en C++17, lié à NKWindow, NKEvent et à leurs fondations (NKMath, NKCore, NKMemory, NKLogger, NKPlatform, NKContainers, NKThreading, NKTime, NKStream, NKFileSystem), avec les bibliothèques système X11 nécessaires sous Linux (X11, Xext, Xrandr, Xinerama, Xcursor, Xi, Xfixes, Xss, GL).
+Voir le fichier joint. Il déclare un `windowedapp()` en C++17, lié à NKWindow, NKEvent et à leurs fondations (NKMath, NKCore, NKMemory, NKLogger, NKPlatform, NKContainers, NKThreading, NKTime, NKStream, NKFileSystem)
 
 ## La capture
 
