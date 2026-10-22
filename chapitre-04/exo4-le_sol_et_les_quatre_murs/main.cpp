@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+fs dtudio
 struct Emprise {
     long long xmin;
     long long xmax;
