@@ -1,0 +1,8 @@
+Ma sensibilité : 0.002 radian par compte du capteur, soit environ 0.115 degré par compte. Je l'ai gardée telle quelle pendant toute la mesure.
+
+Vitesse de dérive : -6.9 deg/s
+Je l'ai calculée sur la ligne à t = 20.0 s (lacet = -4.1 deg) et celle à t = 24.0 s (lacet = -31.6 deg) : (-31.6 - (-4.1)) / (24.0 - 20.0) = -27.5 / 4 = -6.875 deg/s, arrondi à -6.9. La souris ne bougeait plus du tout pendant ces lignes.
+
+D'où vient ce chiffre : chaque image ajoute brut x sensibilité au lacet. Sur mes lignes, brut vaut -1 à chaque seconde, et les images avancent de 60 par seconde (1150, 1210, 1270, 1330, 1390). Une image fait donc tourner la tête de -1 x 0.002 rad = -0.115 deg, et 60 images par seconde donnent 60 x (-0.115) = -6.875 deg/s. C'est exactement ce que j'ai mesuré. Le signe négatif vient de la valeur -1 : le dernier déplacement reçu allait d'un compte vers la gauche, et la tête tourne dans ce sens. Si ma cadence ou ma sensibilité était différente, le chiffre serait différent, c'est pour ça qu'il est propre à ma machine.
+
+Pourquoi elle ne s'arrête pas : la colonne brut ne revient jamais à 0. Elle reste à -1 sur toutes les lignes alors que je ne touche plus la souris. Le module d'entrées garde le déplacement du dernier événement et ne le remet jamais à zéro : personne ne le consomme. Comme mon programme relit cette même valeur à chaque image et l'ajoute au lacet sans rien vider, il rejoue le dernier mouvement indéfiniment, 60 fois par seconde. Pour réparer, il faut s'abonner aux événements, accumuler le déplacement soi-même, puis le lire et le remettre à zéro une fois par image. Le vidage est le point essentiel : sans lui, je reproduirais dans mon code le même défaut.
